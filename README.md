@@ -63,12 +63,12 @@ The Arduino receives the data and displays it on a **1.3" OLED screen**. It also
 1. **Clone the Repo**
 
    ```cmd
-   git clone https://github.com/Tushar625/Reddit-Post-Stats-on-OLED-Display-with-Arduino-and-Python
+   git clone https://github.com/Tushar625/reddit_display
    ```
 
 2. **Upload Arduino Sketch**
    
-   Move the folder containing this repository to the `Arduino` folder inside the `Documents` folder (Windows). Now, this project should appear in the **SKETCHBOOK** tab in Arduino IDE. Upload this into your Arduino.
+   Move the downloaded folder containing this repository to the `Arduino` folder inside the `Documents` folder (Windows). Now, this project should appear in the **SKETCHBOOK** tab in Arduino IDE. Upload this into your Arduino.
 
 3. **Set up the Python Environment**
 
