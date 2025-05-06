@@ -2,9 +2,13 @@
 #include"oled_display.h"
 #include"buzzer.h"
 
+// current data
+
 long score = 0;
 
 long comments = 0;
+
+// previous data
 
 long prev_score = 0;
 
@@ -32,12 +36,8 @@ void loop() {
     if(Serial.available())
     {
         /*
-            an app in the pc writes two bytes of serial data (temp) and a string
-            describing the weather, which is read in the same order as they were
-            written
-        */
+            reading the serial data
 
-        /*
             format of serial data: "{score},{comments},{title}\n
         */
 
@@ -45,24 +45,47 @@ void loop() {
 
         comments = Serial.parseInt();   // reading integer
 
-        Serial.read();  // extracting extra ','
+        Serial.read();  // extracting extra ',' after last integer
 
-        title = Serial.readStringUntil('\n'); // reading a string
+        title = Serial.readStringUntil('\n'); // reading a string till we find '\n'
         
-        title.trim();
+        title.trim();   // getting rid of extra '\n' at the end
 
-        if(initialized && prev_comments < comments)
+        if(initialized)
         {
-            ping();
-        }
+            /*
+                previous values are already initialized so we use them to determine
+                the change in score and no. of comments
+            */
 
-        OLED.print_reddit_data(score, comments, title.substring(0, 15) + "...", initialized && prev_score < score, initialized && prev_comments < comments, initialized && prev_score > score, initialized && prev_comments > comments);
+            if(prev_comments < comments)
+            {
+                ping(); // ping when new comments are added
+            }
+
+            OLED.print_reddit_data(
+                score, 
+                comments,
+                title.substring(0, 15) + "...",
+                ((prev_score == score) ? 0 : ((prev_score < score) ? 1 : -1)),
+                ((prev_comments == comments) ? 0 : ((prev_comments < comments) ? 1 : -1))
+            );
+        }
+        else
+        {
+            /*
+                previous values are not initialized yet as it's the first iteration
+                so send 0 to indicate no change in score or no. of comments
+            */
+
+            OLED.print_reddit_data(score, comments, title.substring(0, 15) + "...");
+
+            initialized = true; // previous values will be initialized soon
+        }
 
         prev_score = score;
         
         prev_comments = comments;
-
-        initialized = true;
     }
 
     delay(100);

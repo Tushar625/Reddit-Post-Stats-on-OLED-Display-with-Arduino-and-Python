@@ -20,10 +20,6 @@ class OLED_DISPLAY
 {
     Adafruit_SH1106G display;
 
-    // uint8_t x, y;
-
-    // char str[6];
-
     public:
     
     OLED_DISPLAY() : display(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -41,24 +37,78 @@ class OLED_DISPLAY
 
         display.setContrast(10);  // dim the display
 
-        display.clearDisplay();
+        display.clearDisplay(); // cleanup the screen
 
-        display.display();
+        display.display();  // refresh the screen, so, it's nice and clean
 
-        // calculating display position
+        // setting text properties
 
         display.setTextSize(1);
 
         display.setTextColor(SH110X_WHITE);
     }
 
-    // print given integer in the middle of the screen
+    /*
+        this class is ued by the function below to display a '+' or '-' sign on the screen 
+        to indicate if teh data has increased or decreased
+    */
 
-    void print_reddit_data(int score, int comments, String title, bool is_score_up = false, bool is_comments_up = false, bool is_score_down = false, bool is_comments_down = false)
+    class status
     {
-        static uint8_t score_pt_count = 0, comments_pt_count = 0;
+        uint8_t count;  // for how many iteration we display the sign
 
-        static String score_pt = "", comments_pt = "";
+        String str; // to store the sign string
+
+        public:
+
+        status() : count(0), str("")
+        {}
+
+        // ture means up, false means down
+
+        void set(bool up)
+        {
+            count = 5;  // initializing iteration counter to count for 5 iterations
+
+            // '+' sign for up, '-' sign for down
+
+            str = up ? " +" : " -";
+        }
+
+        // get the sign, it also updates the iteration count silently
+
+        const String& get()
+        {
+            if(count != 0)
+            {
+                count--;
+            }
+            else if(str.length() > 0)
+            {
+                str = "";   // empty the the string as counter has expired
+            }
+
+            return str;
+        }
+    };
+
+    /*
+        get some data about a reddit post to display in the screen
+
+        score: no. of upvotes - no. of downvotes
+
+        comments: no. of comments
+
+        title: title of the post
+
+        score_trends: -1 (score is decreasing) 0 (no change) 1 (increase)
+
+        comments_trends: -1 (comments is decreasing) 0 (no change) 1 (increase)
+    */
+
+    void print_reddit_data(long score, long comments, String title, int8_t score_trends = 0, int8_t comments_trends = 0)
+    {
+        static status score_status, comments_status;
 
         uint8_t x, y;
 
@@ -66,44 +116,28 @@ class OLED_DISPLAY
 
         uint16_t w, h;
 
-        display.clearDisplay();
+        // updating status according to score
 
-        if(is_score_up || is_score_down)
+        if(score_trends)
         {
-            score_pt_count = 5;
-
-            score_pt = is_score_up ? " +" : " -";
+            score_status.set(score_trends == 1);
         }
         
-        if(is_comments_up || is_comments_down)
+        if(comments_trends)
         {
-            comments_pt_count = 5;
-
-            comments_pt = is_comments_up ? " +" : " -";
+            comments_status.set(comments_trends == 1);
         }
 
-        String score_str = "Score: " + String(score) + score_pt;
+        // makes the score and comments strings and add '+' or '-' after to indicate the trends
 
-        String comments_str = "Comments: " + String(comments) + comments_pt;
+        String score_str = "Score: " + String(score) + score_status.get();
 
-        if(score_pt_count > 0)
-        {
-            score_pt_count--;
-        }
-        else if(score_pt.length() > 0)
-        {
-            score_pt = "";
-        }
+        String comments_str = "Comments: " + String(comments) + comments_status.get();
 
-        if(comments_pt_count > 0)
-        {
-            comments_pt_count--;
-        }
-        else if(comments_pt.length() > 0)
-        {
-            comments_pt = "";
-        }
+        // cleaning the display
 
+        display.clearDisplay();
+        
         // placing score string
 
         display.getTextBounds(score_str, 0, 0, &_x, &_y, &w, &h);
