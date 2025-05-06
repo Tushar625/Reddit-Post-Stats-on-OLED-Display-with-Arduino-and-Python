@@ -2,6 +2,29 @@
 # this script accesses data from reddit api and feeds it to the serial port
 # from where Arduino reads it and displays
 
+# ====================================================================
+# if you want to run this script keep this instructions in mind
+
+
+# ==================================================================================
+# if you want to run this script keep this instructions in mind
+# 
+# *** setting up the serial port ***
+# here I just get a list of all available ports and use the first one, this may not
+# work for you, in that case you replace "ports[0].device" with the name of the port
+# your device is connected to
+# 
+# *** setting up the reddit scrapper ***
+# here you need to have a text file containing all the information this reddit scrapper
+# needs from reddit post url to username and password, check out comments in that portion
+# of the code for more details
+# 
+# *** this loop fetches the data and sends it to the serial device ***
+# this portion doesn't need much change if you don't want to change the format of
+# the serial data but still there is a commented print statement for debug purpose, if
+# activated it will print the serial data sent to the port
+# ==================================================================================
+
 
 import serial
 
@@ -27,7 +50,9 @@ if(not ports):
 
 	quit()
 
-# we have a port, opening it "ports[0].device" name of first port
+# we have a port, opening it, "ports[0].device" name of first port
+# if it doesn't work for you replace "ports[0].device" with the name
+# of the port your device is connected to
 
 arduino = serial.Serial(ports[0].device, 9600);
 
