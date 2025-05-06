@@ -90,6 +90,6 @@ The Arduino receives the data and displays it on a **1.3" OLED screen**. It also
 
 5. **Run the Script**
    
-   Activate the virtual environment and run the script, you can also Double-click the `.bat` file to do the same, though it will run the script in background.
+   Plug in the Arduino to a USB port, activate the virtual environment and run the script, you can also Double-click the `.bat` file to do the same, though it will run the script in background.
 
 ---
