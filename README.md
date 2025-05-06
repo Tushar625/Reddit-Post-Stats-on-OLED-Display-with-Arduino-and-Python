@@ -72,15 +72,15 @@ The Arduino receives the data and displays it on a **1.3" OLED screen**. It also
 
 3. **Set up the Python Environment**
 
-   The Python Environment is created inside `python script to access reddit api` folder. Create a `venv` virtual environment inside it and install the dependencies.
+   The Python Environment is created inside `python script to access reddit api` folder. Create a `venv` virtual environment inside it and install the dependencies. Open `Command Prompt` inside this folder and run,
    
    ```cmd
-   python -m venv venv
-   venv\Scripts\activate  # On Windows
+   python -m venv .venv
+   .venv\Scripts\activate
    pip install -r requirements.txt
    ```
 
-5. **Configure Reddit Access**
+4. **Configure Reddit Access**
 
    Create Reddit API credentials
 
@@ -88,11 +88,8 @@ The Arduino receives the data and displays it on a **1.3" OLED screen**. It also
 
    Add your Reddit post URL and Reddit API credentials (client ID, secret, etc.) in the text file accessed by the python script (check out the comments in this script for more details).
 
-6. **Run the Script**
+5. **Run the Script**
    
    Activate the virtual environment and run the script, you can also Double-click the `.bat` file to do the same, though it will run the script in background.
 
-
-
-   
-
+---
